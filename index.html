@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Recipe Book</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" class="login-box">
+  <h2>Login</h2>
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="handleLogin()">Login</button>
+  <p>admin / 123 → Admin</p>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+
+<header>
+  <h1>🍓 Recipe Book</h1>
+  <button onclick="logout()">Logout</button>
+</header>
+
+<div class="container">
+
+  <!-- ADMIN -->
+  <div id="adminPanel" class="card">
+    <h2>Add / Update Recipe</h2>
+    <input id="titleInput" placeholder="Recipe Title">
+    <textarea id="ingredientsInput" placeholder="Ingredients"></textarea>
+    <textarea id="stepsInput" placeholder="Steps"></textarea>
+    <input id="imageInput" placeholder="Image URL">
+    <button onclick="addRecipe()">Save Recipe</button>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-box">
+    <input id="searchInput" placeholder="Search..." onkeyup="searchRecipe()">
+  </div>
+
+  <!-- RECIPES -->
+  <div id="recipeList" class="grid"></div>
+
+</div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">×</span>
+    <img id="mImg">
+    <h2 id="mTitle"></h2>
+    <p id="mIng"></p>
+    <p id="mSteps"></p>
+
+    <div id="adminBtns">
+      <button onclick="editRecipe()">Edit</button>
+      <button onclick="deleteRecipe()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
