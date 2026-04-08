@@ -1,99 +1,104 @@
 let recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+let role = "";
 let currentIndex = null;
 
-// DISPLAY
-function displayRecipes(list = recipes) {
-  let recipeList = document.getElementById("recipeList");
-  recipeList.innerHTML = "";
+recipes = recipes.filter(r => r && r.title && r.img);
 
-  list.forEach((recipe, index) => {
-    recipeList.innerHTML += `
-      <div class="recipe" onclick="openModal(${index})">
-        <img src="${recipe.image}" class="recipe-img"
-        onerror="this.src='https://via.placeholder.com/300x150'">
-        <h3>${recipe.title}</h3>
-      </div>`;
-  });
-
-  localStorage.setItem("recipes", JSON.stringify(recipes));
-}
-
-// ADD / UPDATE
-function addRecipe() {
-  let title = document.getElementById("title").value;
-  let ingredients = document.getElementById("ingredients").value;
-  let steps = document.getElementById("steps").value;
-  let image = document.getElementById("image").value;
-
-  if (!title || !ingredients || !steps || !image) {
-    alert("Fill all fields 😐");
-    return;
+function handleLogin(){
+  if(username.value==="admin" && password.value==="123"){
+    role="admin";
+  }else{
+    role="user";
   }
 
-  recipes.push({ title, ingredients, steps, image });
+  loginPage.style.display="none";
+  app.style.display="block";
 
-  displayRecipes();
+  if(role==="admin"){
+    adminPanel.style.display="block";
+  }else{
+    adminPanel.style.display="none";
+  }
 
-  document.getElementById("title").value = "";
-  document.getElementById("ingredients").value = "";
-  document.getElementById("steps").value = "";
-  document.getElementById("image").value = "";
+  display();
 }
 
-// OPEN MODAL
-function openModal(index) {
-  currentIndex = index;
-  let recipe = recipes[index];
-
-  document.getElementById("modalTitle").innerText = recipe.title;
-  document.getElementById("modalImg").src = recipe.image;
-
-  document.getElementById("modalIngredients").innerHTML =
-    recipe.ingredients.replace(/\n/g, "<br>");
-
-  document.getElementById("modalSteps").innerHTML =
-    recipe.steps.replace(/\n/g, "<br>");
-
-  document.getElementById("recipeModal").style.display = "block";
+function logout(){
+  location.reload();
 }
 
-// CLOSE MODAL
-function closeModal() {
-  document.getElementById("recipeModal").style.display = "none";
+function addRecipe(){
+  let title=titleInput.value;
+  let ing=ingredientsInput.value;
+  let steps=stepsInput.value;
+  let img=imageInput.value;
+
+  if(!title||!img)return;
+
+  recipes.push({title,ing,steps,img});
+  save();
+  display();
 }
 
-// DELETE
-function deleteRecipe() {
-  recipes.splice(currentIndex, 1);
+function display(list=recipes){
+  recipeList.innerHTML="";
+  list.forEach((r,i)=>{
+    recipeList.innerHTML+=`
+    <div class="recipe" onclick="openModal(${i})">
+      <img src="${r.img}">
+      <h3>${r.title}</h3>
+    </div>`;
+  });
+}
+
+function openModal(i){
+  currentIndex=i;
+  let r=recipes[i];
+
+  mTitle.innerText=r.title;
+  mImg.src=r.img;
+  mIng.innerHTML=r.ing.replace(/\n/g,"<br>");
+  mSteps.innerHTML=r.steps.replace(/\n/g,"<br>");
+
+  modal.style.display="block";
+
+  if(role==="admin"){
+    adminBtns.style.display="flex";
+  }else{
+    adminBtns.style.display="none";
+  }
+}
+
+function closeModal(){
+  modal.style.display="none";
+}
+
+function deleteRecipe(){
+  recipes.splice(currentIndex,1);
+  save();
+  display();
   closeModal();
-  displayRecipes();
 }
 
-// EDIT
-function editRecipe() {
-  let recipe = recipes[currentIndex];
+function editRecipe(){
+  let r=recipes[currentIndex];
 
-  document.getElementById("title").value = recipe.title;
-  document.getElementById("ingredients").value = recipe.ingredients;
-  document.getElementById("steps").value = recipe.steps;
-  document.getElementById("image").value = recipe.image;
+  titleInput.value=r.title;
+  ingredientsInput.value=r.ing;
+  stepsInput.value=r.steps;
+  imageInput.value=r.img;
 
-  recipes.splice(currentIndex, 1);
-
+  recipes.splice(currentIndex,1);
+  save();
   closeModal();
-  displayRecipes();
 }
 
-// SEARCH
-function searchRecipe() {
-  let value = document.getElementById("search").value.toLowerCase();
-
-  let filtered = recipes.filter(r =>
-    r.title.toLowerCase().includes(value)
-  );
-
-  displayRecipes(filtered);
+function searchRecipe(){
+  let v=searchInput.value.toLowerCase();
+  let f=recipes.filter(r=>r.title.toLowerCase().includes(v));
+  display(f);
 }
 
-// LOAD
-displayRecipes();
+function save(){
+  localStorage.setItem("recipes",JSON.stringify(recipes));
+}
