@@ -3,6 +3,8 @@ body {
   font-family: Arial;
   background: linear-gradient(135deg,#ffd6e0,#fff1f5);
   text-align: center;
+  margin-left:20 px;
+  margin-right:20 px;
 }
 
 /* LOGIN */
